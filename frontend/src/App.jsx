@@ -5,6 +5,8 @@ const EMPTY_RESULT = {
   score: 0,
   rating: 'Very Weak',
   entropy_bits: 0,
+  guess_difficulty: 'Very Low',
+  crack_time_estimate: '< 1 second',
   findings: [],
   advice: ['Start typing to analyze password strength.'],
   checks: {},
@@ -108,6 +110,14 @@ function App() {
               <div>
                 <span>Entropy</span>
                 <strong>{result.entropy_bits} bits</strong>
+              </div>
+              <div>
+                <span>Guess Difficulty</span>
+                <strong>{result.guess_difficulty}</strong>
+              </div>
+              <div>
+                <span>Crack Time (Offline)</span>
+                <strong>{result.crack_time_estimate}</strong>
               </div>
             </div>
 

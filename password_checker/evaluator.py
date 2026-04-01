@@ -102,6 +102,8 @@ class PasswordAnalysis:
     score: int
     rating: str
     entropy_bits: float
+    guess_difficulty: str
+    crack_time_estimate: str
     findings: List[str]
     advice: List[str]
     checks: Dict[str, bool]
@@ -127,15 +129,18 @@ class PasswordEvaluator:
         }
 
         entropy_bits = self._estimate_entropy_bits(password)
+        guess_difficulty, crack_time_estimate = self._estimate_crack_difficulty(entropy_bits)
         score = self._score(password, entropy_bits, checks)
         rating = self._rating(score, checks)
-        findings = self._build_findings(checks, entropy_bits)
+        findings = self._build_findings(checks, entropy_bits, guess_difficulty, crack_time_estimate)
         advice = self._build_advice(password, checks)
 
         return PasswordAnalysis(
             score=score,
             rating=rating,
             entropy_bits=round(entropy_bits, 2),
+            guess_difficulty=guess_difficulty,
+            crack_time_estimate=crack_time_estimate,
             findings=findings,
             advice=advice,
             checks=checks,
@@ -226,8 +231,16 @@ class PasswordEvaluator:
             return "Strong"
         return "Very Strong"
 
-    def _build_findings(self, checks: Dict[str, bool], entropy_bits: float) -> List[str]:
+    def _build_findings(
+        self,
+        checks: Dict[str, bool],
+        entropy_bits: float,
+        guess_difficulty: str,
+        crack_time_estimate: str,
+    ) -> List[str]:
         findings: List[str] = [f"Estimated entropy: {entropy_bits:.2f} bits"]
+        findings.append(f"Estimated guess difficulty: {guess_difficulty}")
+        findings.append(f"Estimated offline crack time: {crack_time_estimate}")
 
         if checks["is_common_password"]:
             findings.append("Matches a known common password")
@@ -308,3 +321,47 @@ class PasswordEvaluator:
         if re.search(r"(.{2,4})\1{1,}", text):
             return True
         return False
+
+    def _estimate_crack_difficulty(self, entropy_bits: float) -> tuple[str, str]:
+        # Assumes a fast offline attacker at 10^10 guesses/second.
+        guesses_per_second = 10_000_000_000
+        log2_seconds = entropy_bits - 1 - log2(guesses_per_second)
+
+        crack_time_estimate = self._format_log2_duration(log2_seconds)
+
+        if log2_seconds < log2(60):
+            difficulty = "Very Low"
+        elif log2_seconds < log2(60 * 60):
+            difficulty = "Low"
+        elif log2_seconds < log2(60 * 60 * 24 * 30):
+            difficulty = "Moderate"
+        elif log2_seconds < log2(60 * 60 * 24 * 365 * 5):
+            difficulty = "High"
+        else:
+            difficulty = "Very High"
+
+        return difficulty, crack_time_estimate
+
+    def _format_log2_duration(self, log2_seconds: float) -> str:
+        if log2_seconds <= 0:
+            return "< 1 second"
+
+        seconds = 2 ** min(log2_seconds, 62)
+        minute = 60
+        hour = 60 * minute
+        day = 24 * hour
+        year = 365 * day
+
+        if log2_seconds > 62:
+            return "> 100 years"
+        if seconds < minute:
+            return f"{round(seconds)} seconds"
+        if seconds < hour:
+            return f"{round(seconds / minute)} minutes"
+        if seconds < day:
+            return f"{round(seconds / hour)} hours"
+        if seconds < year:
+            return f"{round(seconds / day)} days"
+        if seconds < 100 * year:
+            return f"{round(seconds / year)} years"
+        return "> 100 years"

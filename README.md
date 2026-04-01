@@ -10,6 +10,24 @@ This project now includes a Python password analysis engine aligned with modern 
 - Detects predictable patterns like sequences, keyboard walks, repetition, and leetspeak substitutions.
 - Returns an objective score, entropy estimate, rating, and actionable feedback.
 
+## 15 Feature Checklist
+
+- [x] NIST SP 800-63B policy engine
+- [x] Minimum length enforcement
+- [x] Entropy calculation (bits)
+- [x] Strength score (0-100)
+- [x] Strength tier classification
+- [x] Dictionary word detection
+- [x] Common password blacklist check
+- [x] Sequential pattern detection
+- [x] Keyboard walk detection
+- [x] Repeated character/chunk detection
+- [x] Leetspeak substitution detection
+- [x] Live, real-time feedback in website
+- [x] Actionable improvement advice
+- [x] Rule breakdown panel (pass/flagged)
+- [x] Estimated crack-time / guess-difficulty indicator
+
 ## Run Locally
 
 ### Install Dependencies

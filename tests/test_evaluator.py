@@ -38,6 +38,8 @@ class PasswordEvaluatorTests(unittest.TestCase):
         result = self.evaluator.evaluate("3&L6CTxiM47wts")
         self.assertGreaterEqual(result.score, 80)
         self.assertIn(result.rating, {"Strong", "Very Strong"})
+        self.assertIn(result.guess_difficulty, {"High", "Very High"})
+        self.assertNotEqual(result.crack_time_estimate, "< 1 second")
 
 
 if __name__ == "__main__":
