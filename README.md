@@ -10,7 +10,7 @@ This project now includes a Python password analysis engine aligned with modern 
 - Detects predictable patterns like sequences, keyboard walks, repetition, and leetspeak substitutions.
 - Returns an objective score, entropy estimate, rating, and actionable feedback.
 
-## 15 Feature Checklist
+## Existing 15 Feature Checklist
 
 - [x] NIST SP 800-63B policy engine
 - [x] Minimum length enforcement
@@ -27,6 +27,28 @@ This project now includes a Python password analysis engine aligned with modern 
 - [x] Actionable improvement advice
 - [x] Rule breakdown panel (pass/flagged)
 - [x] Estimated crack-time / guess-difficulty indicator
+
+---
+
+## New 15 Feature Checklist
+
+These are the next features to add on top of the existing checker.
+
+- [ ] Password generator
+- [ ] Length slider
+- [ ] Special characters toggle
+- [ ] Numbers toggle
+- [ ] Uppercase toggle
+- [ ] Lowercase toggle
+- [ ] Copy to clipboard button
+- [ ] Exclude ambiguous characters
+- [ ] Regenerate until it passes the checker
+- [ ] Show generated strength before copy
+- [ ] Reset generator options
+- [ ] Generate and auto-fill into checker
+- [ ] Show why a generated password failed
+- [ ] Dedicated generator page with routing
+- [ ] Rule-based generator scoring using the existing evaluator
 
 ## Run Locally
 
